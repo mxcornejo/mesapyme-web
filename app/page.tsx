@@ -2,6 +2,9 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { crearSolicitud } from "@/lib/model";
 
 type Solicitud = ReturnType<typeof crearSolicitud>;
@@ -13,6 +16,7 @@ function leer(): Solicitud[] {
 
 export default function Portal() {
   const [casos, setCasos] = useState<Solicitud[]>([]);
+  const [categoria, setCategoria] = useState("Accesos");
   const [mensaje, setMensaje] = useState("");
   useEffect(() => {
     try { setCasos(leer()); }
@@ -32,6 +36,7 @@ export default function Portal() {
       setCasos(nuevos);
       setMensaje("Solicitud #" + caso.id + " registrada.");
       form.reset();
+      setCategoria("Accesos");
     } catch (error) {
       setMensaje(error instanceof Error ? error.message : "No se pudo registrar la solicitud.");
     }
@@ -42,9 +47,18 @@ export default function Portal() {
     <p>Demostración local. Registra un caso con datos ficticios.</p>
     <section><h2>Nueva solicitud</h2>
       <form onSubmit={registrar}>
-        <label>Asunto<input required name="titulo" maxLength={150} /></label>
-        <label>Categoría<select name="categoria"><option>Accesos</option><option>Equipos</option></select></label>
-        <label>Descripción<textarea required name="descripcion" maxLength={2000} rows={3} /></label>
+        <label>Asunto<Input required name="titulo" maxLength={150} /></label>
+        <div className="campo-categoria">
+          <label htmlFor="categoria">Categoría</label>
+          <Select name="categoria" value={categoria} onValueChange={setCategoria}>
+            <SelectTrigger id="categoria"><SelectValue /></SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="Accesos">Accesos</SelectItem>
+              <SelectItem value="Equipos">Equipos</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <label>Descripción<Textarea required name="descripcion" maxLength={2000} rows={3} /></label>
         <Button type="submit">Registrar solicitud</Button>
       </form>
     </section>
