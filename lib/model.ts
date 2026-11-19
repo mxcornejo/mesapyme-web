@@ -1,4 +1,4 @@
-export function crearSolicitud(titulo, descripcion, categoria, id, fecha) {
+export function crearSolicitud(titulo: string, descripcion: string, categoria: string, id: number, fecha: string) {
   titulo = titulo.trim();
   descripcion = descripcion.trim();
   if (!titulo || !descripcion || titulo.length > 150 || descripcion.length > 2000)
